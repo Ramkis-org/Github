@@ -1,0 +1,8 @@
+Notepad++ v8.7.9 regression-fixes, bug-fixes & enhancements:
+
+ 1. Fix incorrect syntax highlighting regressions.
+ 2. Update to Scintilla 5.5.5 & Lexilla 5.4.3.
+ 3. Fix bug where plugin button hiding settings in toolbarButtonsConf.xml are ignored. 
+ 4. Fix SQL Backslash Escape preference not taking effect immediately.	
+ 5. Add new low-level DirectX11 DirectWrite 1.1 Scintilla rendering mode.
+ 6. Add versions of external libraries (Scintilla/Lexilla/Boost) to Debug Info.
