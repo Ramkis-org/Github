@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/your-repo/hello-sre.git'
+                git branch: 'main', url: 'https://github.com/Ramkis-org/Github.git'
             }
         }
 
