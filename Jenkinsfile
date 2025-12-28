@@ -6,8 +6,8 @@ pipeline {
         ACR_NAME           = "srelloydsacr123"
         IMAGE_NAME         = "hello-sre"
         IMAGE_TAG          = "v1"
-        AKS_RESOURCE_GROUP = "sre-demo-rg"
-        AKS_CLUSTER_NAME   = "sre-demo-aks"
+        AKS_RESOURCE_GROUP = "sre-demo-rg1"
+        AKS_CLUSTER_NAME   = "sre-demo-aks1"
     }
 
     stages {
