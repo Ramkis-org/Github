@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-sre
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-sre
+  template:
+    metadata:
+      labels:
+        app: hello-sre
+    spec:
+      containers:
+        - name: app
+          image: srelloydsacr123.azurecr.io/hello-sre:v1
+          ports:
+            - containerPort: 80

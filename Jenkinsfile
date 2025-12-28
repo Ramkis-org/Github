@@ -62,6 +62,9 @@ pipeline {
                       -n ${AKS_CLUSTER_NAME} \
                       --overwrite-existing
 
+                    kubectl apply -f k8s/deployment.yaml
+                    kubectl apply -f k8s/service.yaml
+
                     kubectl set image deployment/hello-sre \
                       app=${ACR_NAME}.azurecr.io/${IMAGE_NAME}:${IMAGE_TAG}
 
