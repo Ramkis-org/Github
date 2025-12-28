@@ -19,13 +19,11 @@ pipeline {
 
         stage('Azure Login') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'azure-sp', 
-                    usernameVariable: 'AZURE_APP_ID', passwordVariable: 'AZURE_PASSWORD')]) {
-                    sh """
-                        az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant <tenant-id>
-                        az account set --subscription $AZURE_SUBSCRIPTION
-                    """
-                }
+                // Login using managed identity on Jenkins VM or VM with Azure CLI logged in
+                sh """
+                    az login --identity
+                    az account set --subscription $AZURE_SUBSCRIPTION
+                """
             }
         }
 
