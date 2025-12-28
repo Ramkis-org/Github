@@ -32,7 +32,7 @@ pipeline {
                 dir('terraform') {
                     sh """
                         terraform init
-                        terraform plan -out=tfplan
+                        terraform plan -out=tfplan -var="azure_subscription_id=$AZURE_SUBSCRIPTION"
                         terraform apply -auto-approve tfplan
                     """
                 }
