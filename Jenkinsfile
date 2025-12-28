@@ -66,7 +66,7 @@ pipeline {
             echo "Deployment successful!"
         }
         failure {
-            echo "Deployment fail!"
+            echo "Deployment failed!"
         }
     }
 }
