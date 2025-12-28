@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        AZURE_SUBSCRIPTION = "6efdb685-f5ce-4be4-9841-83d09c4ac05a"
         ACR_NAME = "srelloydsacr123"
         IMAGE_NAME = "hello-sre"
         IMAGE_TAG = "v1"
@@ -18,35 +19,46 @@ pipeline {
 
         stage('Azure Login') {
             steps {
-                sh "az login --identity"
-                sh "az account set --subscription 6efdb685-f5ce-4be4-9841-83d09c4ac05a"
+                withCredentials([usernamePassword(credentialsId: 'azure-sp', 
+                    usernameVariable: 'AZURE_APP_ID', passwordVariable: 'AZURE_PASSWORD')]) {
+                    sh """
+                        az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant <tenant-id>
+                        az account set --subscription $AZURE_SUBSCRIPTION
+                    """
+                }
             }
         }
 
-        stage('Docker Build') {
+        stage('Terraform Apply') {
             steps {
-                sh "docker build -t $IMAGE_NAME:$IMAGE_TAG ."
+                dir('terraform') {
+                    sh """
+                        terraform init
+                        terraform plan -out=tfplan
+                        terraform apply -auto-approve tfplan
+                    """
+                }
             }
         }
 
-        stage('Docker Tag') {
+        stage('Docker Build & Push') {
             steps {
-                sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ACR_NAME}.azurecr.io/${IMAGE_NAME}:${IMAGE_TAG}"
-            }
-        }
-
-        stage('Push to ACR') {
-            steps {
-                sh "az acr login --name ${ACR_NAME}"
-                sh "docker push ${ACR_NAME}.azurecr.io/${IMAGE_NAME}:${IMAGE_TAG}"
+                sh """
+                    docker build -t $IMAGE_NAME:$IMAGE_TAG .
+                    docker tag $IMAGE_NAME:$IMAGE_TAG $ACR_NAME.azurecr.io/$IMAGE_NAME:$IMAGE_TAG
+                    az acr login --name $ACR_NAME
+                    docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:$IMAGE_TAG
+                """
             }
         }
 
         stage('Deploy to AKS') {
             steps {
-                sh "az aks get-credentials -g ${AKS_RESOURCE_GROUP} -n ${AKS_CLUSTER_NAME} --overwrite-existing"
-                sh "kubectl set image deployment/hello-sre app=${ACR_NAME}.azurecr.io/${IMAGE_NAME}:${IMAGE_TAG}"
-                sh "kubectl rollout status deployment/hello-sre"
+                sh """
+                    az aks get-credentials -g $AKS_RESOURCE_GROUP -n $AKS_CLUSTER_NAME --overwrite-existing
+                    kubectl set image deployment/hello-sre app=$ACR_NAME.azurecr.io/$IMAGE_NAME:$IMAGE_TAG
+                    kubectl rollout status deployment/hello-sre
+                """
             }
         }
     }
