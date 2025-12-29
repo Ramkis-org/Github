@@ -1,0 +1,35 @@
+resource "azurerm_resource_group" "rg" {
+  name     = var.resource_group_name
+  location = var.location
+}
+
+resource "azurerm_container_registry" "acr" {
+  name                = var.acr_name
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  sku                 = "Basic"
+  admin_enabled       = true
+}
+
+resource "azurerm_kubernetes_cluster" "aks" {
+  name                = var.aks_name
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  dns_prefix          = "sre-demo"
+
+  default_node_pool {
+    name       = "system"
+    vm_size    = "Standard_DS3_v2"
+    node_count = 3
+
+    availability_zones = ["1", "2", "3"]
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  network_profile {
+    network_plugin = "azure"
+  }
+}
