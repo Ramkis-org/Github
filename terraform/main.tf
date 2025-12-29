@@ -1,16 +1,24 @@
-data "azurerm_resource_group" "rg" {
-  name     = var.resource_group_name
- # location = var.location
-}
+###########################################################
+# Data Sources for Existing Resources
+###########################################################
 
+# Reference existing Resource Group
 data "azurerm_resource_group" "rg" {
   name = var.resource_group_name
 }
 
+# Reference existing Container Registry
+data "azurerm_container_registry" "acr" {
+  name                = var.acr_name
+  resource_group_name = data.azurerm_resource_group.rg.name
+}
 
+###########################################################
+# AKS Cluster
+###########################################################
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_name
-  location            = var.location
+  location            = data.azurerm_resource_group.rg.location
   resource_group_name = data.azurerm_resource_group.rg.name
   dns_prefix          = "sre-demo"
 
