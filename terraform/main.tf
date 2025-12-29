@@ -1,20 +1,20 @@
-resource "azurerm_resource_group" "rg" {
+data "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
-  location = var.location
+ # location = var.location
 }
 
-resource "azurerm_container_registry" "acr" {
+data "azurerm_container_registry" "acr" {
   name                = var.acr_name
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = var.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+ # location            = var.location
   sku                 = "Basic"
   admin_enabled       = true
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_name
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = data.var.location
+  resource_group_name = data.azurerm_resource_group.rg.name
   dns_prefix          = "sre-demo"
 
   default_node_pool {
