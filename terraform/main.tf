@@ -3,13 +3,10 @@ data "azurerm_resource_group" "rg" {
  # location = var.location
 }
 
-data "azurerm_container_registry" "acr" {
-  name                = var.acr_name
-  resource_group_name = data.azurerm_resource_group.rg.name
- # location            = var.location
- # sku                 = "Basic"
- # admin_enabled       = true
+data "azurerm_resource_group" "rg" {
+  name = var.resource_group_name
 }
+
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_name
@@ -21,8 +18,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     name       = "system"
     vm_size    = "Standard_DS3_v2"
     node_count = 3
-
-    zones = ["1", "2", "3"]
+    zones      = ["1", "2", "3"]
   }
 
   identity {
