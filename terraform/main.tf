@@ -22,7 +22,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vm_size    = "Standard_DS3_v2"
     node_count = 3
 
-    availability_zones = ["1", "2", "3"]
+    zones = ["1", "2", "3"]
   }
 
   identity {
