@@ -7,13 +7,13 @@ data "azurerm_container_registry" "acr" {
   name                = var.acr_name
   resource_group_name = data.azurerm_resource_group.rg.name
  # location            = var.location
-  sku                 = "Basic"
-  admin_enabled       = true
+ # sku                 = "Basic"
+ # admin_enabled       = true
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_name
-  location            = data.var.location
+  location            = var.location
   resource_group_name = data.azurerm_resource_group.rg.name
   dns_prefix          = "sre-demo"
 
