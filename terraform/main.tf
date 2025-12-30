@@ -38,9 +38,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
-###########################################################
+##########################################################
 # Give AKS kubelet permission to pull from ACR
-###########################################################
+##########################################################
 resource "azurerm_role_assignment" "aks_acr_pull" {
   scope                = data.azurerm_container_registry.acr.id
   role_definition_name = "AcrPull"
