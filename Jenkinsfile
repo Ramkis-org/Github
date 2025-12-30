@@ -68,7 +68,7 @@ pipeline {
                     #kubectl set image deployment/hello-sre \
                       app=${ACR_NAME}.azurecr.io/${IMAGE_NAME}:${IMAGE_TAG}
 
-                    kubectl rollout status deployment/hello-sre
+                    #kubectl rollout status deployment/hello-sre
                 """
             }
         }
